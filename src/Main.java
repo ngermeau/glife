@@ -33,16 +33,33 @@ public class Main {
       return newLivingCell;
   }
 
+  public void print(Set<Cell> livingCells){
+      int[][] board = new int[20][20];
+
+      for(Cell cell : livingCells){
+        board[cell.x][cell.y] = 1;
+      }
+
+    for (int i = 0; i < 20; i++) {
+      System.out.println();
+      for (int j = 0; j < 20; j++) {
+        System.out.print(board[i][j]);
+      }
+    }
+    System.out.println();
+    System.out.println();
+    System.out.print("new state");
+  }
   public static void main(String[] args) {
-    System.out.println("Hello world!");
     Main main = new Main();
-    Set<Cell> livingCell = new HashSet<>();
-    livingCell.add(new Cell(3,3));
-    livingCell.add(new Cell(2,3));
-    livingCell.add(new Cell(4,3));
-    for (int i = 0; i < 3; i++){
-      System.out.println(livingCell);
-      livingCell = main.tick(livingCell);
+    Set<Cell> livingCells = new HashSet<>();
+    livingCells.add(new Cell(3 +  8,3 + 8));
+    livingCells.add(new Cell(2 +8,3 + 8));
+    livingCells.add(new Cell(4 + 8,3 + 8));
+    livingCells.add(new Cell(3 + 8,4 + 8));
+    for (int i = 0; i < 10; i++){
+      main.print(livingCells);
+      livingCells = main.tick(livingCells);
     }
   }
 
