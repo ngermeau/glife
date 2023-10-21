@@ -4,47 +4,29 @@ import java.util.Set;
 
 public class Main extends PApplet {
 
+  int rectSize = 5;
   Set<Cell> livingCells = new HashSet<>();
 
-  public void loadGlide(){
-    for (int i = 0; i < 4; i++) {
-      livingCells.add(new Cell(i + 10, 10));
-      livingCells.add(new Cell(i + 10, 18));
-    }
 
-    for (int i = 0; i < 8; i++) {
-      livingCells.add(new Cell(i + 8, 12));
-      livingCells.add(new Cell(i + 8, 16));
-    }
-
-    for (int i = 0; i < 12; i++) {
-      livingCells.add(new Cell(i + 6, 14));
-    }
-  }
-
-  public void loadShip(){
-    livingCells.add(new Cell(3 + 8, 3 + 8));
-    livingCells.add(new Cell(2 + 8, 3 + 8));
-    livingCells.add(new Cell(4 + 8, 3 + 8));
-    livingCells.add(new Cell(3 + 8, 4 + 8));
-  }
   public void setup() {
-    frameRate(1);
-    loadGlide();
+    frameRate(60);
+    for (int i = 0; i < 200; i++) {
+      ShapeLibrary.glide(round(random(0, (float) width /rectSize)),round(random(0,  (float) height /rectSize)), livingCells);
+
+    }
   }
 
   public void settings() {
-    size(300, 300);
+    size(800, 800);
   }
 
   public void grid(){
-    int rectSize = 10;
-    for (int i = 0; i < 50; i++) {
-      for (int j = 0; j < 50; j++) {
+    for (int i = 0; i < width / rectSize; i++) {
+      for (int j = 0; j < height / rectSize; j++) {
         if (livingCells.contains(new Cell(i,j))){
-          fill(255,0,0);
+          fill(70,129,137);
         }else {
-          fill(255);
+          fill(244,233,205);
         }
         rect(i * rectSize, j * rectSize, rectSize, rectSize);
       }

@@ -13,17 +13,17 @@ public class Cell {
   }
 
   public Set<Cell> aliveNeighbours(Set<Cell> livingCells) {
-    Set<Cell> neighbours = neighboors();
+    Set<Cell> neighbours = neighbours();
     neighbours.retainAll(livingCells);
     return neighbours;
   }
 
   public Set<Cell> deadNeighbours(Set<Cell> livingCells) {
-    Set<Cell> neighbours = neighboors();
+    Set<Cell> neighbours = neighbours();
     neighbours.removeAll(livingCells);
     return neighbours;
   }
-  public Set<Cell> neighboors() {
+  public Set<Cell> neighbours() {
     Set<Cell> neighbours = new HashSet<>();
     for (int i = -1; i <= 1; i++) {
       for (int j = -1; j <= 1; j++) {
