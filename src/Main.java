@@ -1,18 +1,21 @@
 import processing.core.PApplet;
+import processing.core.PImage;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class Main extends PApplet {
 
-  int rectSize = 5;
+  int rectSize = 8;
   Set<Cell> livingCells = new HashSet<>();
-
+  PImage colorRefImg;
 
   public void setup() {
-    frameRate(60);
+    colorRefImg = loadImage("colorRefImage.jpg");
+    colorRefImg.resize(1100,1100);
+    frameRate(10);
     for (int i = 0; i < 200; i++) {
       ShapeLibrary.glide(round(random(0, (float) width /rectSize)),round(random(0,  (float) height /rectSize)), livingCells);
-
     }
   }
 
@@ -24,11 +27,15 @@ public class Main extends PApplet {
     for (int i = 0; i < width / rectSize; i++) {
       for (int j = 0; j < height / rectSize; j++) {
         if (livingCells.contains(new Cell(i,j))){
-          fill(70,129,137);
+          int color = colorRefImg.get(i,j);
+          fill(color);
+          float size = map(brightness(color),0,255,0,rectSize-1);
+          rect(i * rectSize, j * rectSize, size, size);
+
         }else {
-          fill(244,233,205);
+          fill(22);
+          rect(i * rectSize, j * rectSize, rectSize, rectSize);
         }
-        rect(i * rectSize, j * rectSize, rectSize, rectSize);
       }
     }
   }
