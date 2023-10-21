@@ -1,41 +1,49 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
 
-  private int boardSize = 10;
-  private List<Cell> livingCells = new ArrayList<>();
 
-  public void initLivingCells(){
-    livingCells.add(new Cell(5,5));
-    livingCells.add(new Cell(7,7));
-  }
-
-  private void printLivingCells() {
-    System.out.println(livingCells);
-  }
-
-  public List<Cell> neighbours(Cell cell){
-    List<Cell> neighbours = new ArrayList<>();
-    for(int i = -1; i <= 1; i++){
-      for (int j = -1; j <= 1; j++) {
-        if (i == 0 && j == 0) continue;
-        neighbours.add(new Cell(cell.x + i, cell.y + j));
-      }
+  public Set<Cell> neighboursDeadCells(Set<Cell> livingCells){
+    Set<Cell> deadCells = new HashSet<>();
+    for (Cell cell : livingCells) {
+      deadCells.addAll(cell.deadNeighbours(livingCells));
     }
-    return neighbours;
+    return deadCells;
   }
-  public void calculate(Cell cell){
 
+  public Set<Cell> tick(Set<Cell> livingCells){
+      Set<Cell> newLivingCell = new HashSet<>();
+      Set<Cell> deadCells = neighboursDeadCells(livingCells);
+
+      for (Cell cell : livingCells) {
+        int nbrOfAliveNeighboor = cell.aliveNeighbours(livingCells).size();
+        if (nbrOfAliveNeighboor == 2 || nbrOfAliveNeighboor == 3) {
+          newLivingCell.add(cell);
+        }
+      }
+
+      for (Cell cell : deadCells){
+        int nbrOfAliveNeighboor = cell.aliveNeighbours(livingCells).size();
+        if (nbrOfAliveNeighboor == 3) {
+          newLivingCell.add(cell);
+        }
+
+      }
+      return newLivingCell;
   }
+
   public static void main(String[] args) {
     System.out.println("Hello world!");
     Main main = new Main();
-    main.initLivingCells();
-    new Cell(3,3);
-    List<Cell> neighbours = main.neighbours(new Cell(3,3));
-    System.out.println(neighbours);
-//    main.printLivingCells();
+    Set<Cell> livingCell = new HashSet<>();
+    livingCell.add(new Cell(3,3));
+    livingCell.add(new Cell(2,3));
+    livingCell.add(new Cell(4,3));
+    for (int i = 0; i < 3; i++){
+      System.out.println(livingCell);
+      livingCell = main.tick(livingCell);
+    }
   }
 
 }
