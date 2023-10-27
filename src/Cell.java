@@ -6,10 +6,12 @@ public class Cell {
 
   public int x;
   public int y;
+  public boolean played;
 
   public Cell(int x, int y) {
     this.x = x;
     this.y = y;
+    this.played = false;
   }
 
   public Set<Cell> aliveNeighbours(Set<Cell> livingCells) {
