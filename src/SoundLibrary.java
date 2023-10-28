@@ -11,19 +11,22 @@ import java.util.stream.Stream;
 
 public class SoundLibrary {
 
-  private List<Path> sounds = new ArrayList<>();
-  public void playSound(int id, PApplet applet){
-    System.out.println(sounds.size());
-      SoundFile sound = new SoundFile(applet,sounds.get(id).toString());
-      sound.play();
+  private static PApplet currentPApplet;
+  private static List<String> listOfSounds = new ArrayList<>();
+  private static String folderName = "sound";
+
+  public static void play(int x) {
+    SoundFile sound = new SoundFile(currentPApplet, listOfSounds.get(x));
+    System.out.println(x);
+    sound.play();
   }
 
-  public void loadSounds() {
-    // prend le contenu du folder on s'en fout des noms et le tape dans un array
-    try (Stream<Path> paths = Files.walk(Paths.get("sound"))) {
-      sounds = paths.filter(Files::isRegularFile).toList();
-      System.out.println(sounds.size());
-    }catch (IOException ioException){
+  public static void initialize(PApplet pApplet) {
+    currentPApplet = pApplet;
+    try (Stream<Path> paths = Files.walk(Paths.get(folderName))) {
+      listOfSounds = paths.filter(Files::isRegularFile).map(Path::toString).toList();
+      System.out.println(listOfSounds);
+    } catch (IOException ioException) {
       throw new RuntimeException();
     }
   }

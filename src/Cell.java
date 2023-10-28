@@ -52,4 +52,13 @@ public class Cell {
   public String toString() {
     return "[" + x + "," + y + "]";
   }
+
+  public void playSound(){
+    this.played = true;
+    SoundLibrary.play(this.y);
+  }
+
+  public boolean isPlayed() {
+    return played;
+  }
 }

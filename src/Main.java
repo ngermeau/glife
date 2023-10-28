@@ -1,76 +1,78 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
-import java.util.HashSet;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 public class Main extends PApplet {
 
-  int rectSize = 40;
   Set<Cell> livingCells = new HashSet<>();
-  PImage colorRefImg;
-  SoundLibrary sl = new SoundLibrary();
-  int soundColumn = 0;
+  int sketchWidth= 800;
+  int sketchHeight = 800;
+  int squareSize = 7;
+  int boardWidth = sketchWidth / squareSize;
+  int boardHeight= sketchHeight/ squareSize;
+  int frameRate = 200;
+  Color backgroundColor = new Color(0xf8f9fa);
+  List<Color> colors = new ArrayList<>();
+
+  String colorsString = "03045e,023e8a,0077b6,0096c7,00b4d8,48cae4,90e0ef,ade8f4,caf0f8";
+
 
   public void setup() {
-    sl.loadSounds();
-    colorRefImg = loadImage("colorRefImage.jpg");
-    colorRefImg.resize(200,200);
-    frameRate(1);
-    for (int i = 0; i < 2; i++) {
-      ShapeLibrary.glide(round(random(0, (float) width /rectSize)),round(random(0,  (float) height /rectSize)), livingCells);
+    SoundLibrary.initialize(this);
+    for (int i = 0; i < 100; i++){
+      int x = round(random(0,100));
+      int y = round(random(0,100));
+      this.livingCells.addAll(ShapeLibrary.glide(x,y));
     }
+    frameRate(frameRate);
+    colors.add(new Color(0xe9ecef));
+    colors.add(new Color(0xdee2e6));
+    colors.add(new Color(0xced4da));
+    colors.add(new Color(0xadb5bd));
+    colors.add(new Color(0x495057));
+    colors.add(new Color(0x343a40));
+    colors.add(new Color(0x212529));
   }
 
   public void settings() {
-    size(800, 800);
+    size(sketchWidth, sketchHeight);
   }
 
-  public void grid(){
-    for (int i = 0; i < width / rectSize; i++) {
-      for (int j = 0; j < height / rectSize; j++) {
-        if (livingCells.contains(new Cell(i,j))){
-          final int x = i;
-          final int y = j;
-          Cell cell = livingCells.stream().filter(livingCell -> livingCell.x == x && livingCell.y == y).findFirst().get();
-          int color = colorRefImg.get(x,y);
-          fill(color);
-          if (cell.played) {
-            fill(184, 15, 10);
-          }
-          float size = map(brightness(color),0,255,0,rectSize-1);
-          rect(i * rectSize, j * rectSize, size, size);
-
+  public void displayGrid(){
+    for (int x = 0; x < width / squareSize; x++) {
+      for (int y = 0; y < height / squareSize; y++) {
+        final int i = x, j = y;
+        Optional<Cell> cell = livingCells.stream().filter(lc-> lc.equals(new Cell(i,j))).findFirst();
+        if (cell.isPresent()){
+          Color color = colors.get(round(random(0, colors.size()-1)));
+          int randomSize = round(random(0,8));
+          stroke(color.getRGB());
+          strokeWeight(random(1,10));
+          noFill();
+          ellipse(x * squareSize, y * squareSize,randomSize,randomSize);
+//          arc(x * squareSize, y * squareSize, randomSize, randomSize, 0, PI+QUARTER_PI, CHORD);
         }else {
-          fill(22);
-          rect(i * rectSize, j * rectSize, rectSize, rectSize);
+          fill( this.backgroundColor.getRGB());
+          noStroke();
+          rect(x * squareSize, y * squareSize, squareSize, squareSize);
         }
       }
     }
   }
   public void draw() {
-    grid();
-    this.livingCells = tick(livingCells);
-    playSound();
+    displayGrid();
+    calculateNextTickLivingCells();
+//    playSound();
   }
 
   private void playSound() {
-    System.out.println("column: " + soundColumn);
-    List<Cell> sameColumLivingCells = livingCells.stream().filter(livingCell -> livingCell.x == soundColumn).toList();
-    if (sameColumLivingCells.size() == 0) {
-      soundColumn++;
-      return;
-    };
-    if (soundColumn == width/rectSize) {
-      soundColumn = 0;
-    } else {
-      soundColumn++;
+    Optional<Cell> randomCell = livingCells.stream().filter(cell -> cell.x >= 0 && cell.x < boardWidth && cell.y >=0 && cell.y <= boardHeight).findAny();
+    if (randomCell.isPresent()){
+        randomCell.get().playSound();
     }
-    Cell cell = sameColumLivingCells.get(round(random(0,sameColumLivingCells.size() - 1)));
-    cell.played = true;
-    System.out.println("cell : " + cell.x + "," + cell.y);
-    sl.playSound(cell.y,this);
   }
 
   public Set<Cell> neighboursDeadCells(Set<Cell> livingCells) {
@@ -81,25 +83,25 @@ public class Main extends PApplet {
     return deadCells;
   }
 
-  public Set<Cell> tick(Set<Cell> livingCells) {
-    Set<Cell> newLivingCell = new HashSet<>();
+  public void calculateNextTickLivingCells() {
+    Set<Cell> newLivingCells = new HashSet<>();
     Set<Cell> deadCells = neighboursDeadCells(livingCells);
 
     for (Cell cell : livingCells) {
       int nbrOfAliveNeighboor = cell.aliveNeighbours(livingCells).size();
       if (nbrOfAliveNeighboor == 2 || nbrOfAliveNeighboor == 3) {
-        newLivingCell.add(cell);
+        newLivingCells.add(cell);
       }
     }
 
     for (Cell cell : deadCells) {
       int nbrOfAliveNeighboor = cell.aliveNeighbours(livingCells).size();
       if (nbrOfAliveNeighboor == 3) {
-        newLivingCell.add(cell);
+        newLivingCells.add(cell);
       }
 
     }
-    return newLivingCell;
+    this.livingCells = newLivingCells;
   }
 
 
