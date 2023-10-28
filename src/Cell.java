@@ -17,11 +17,14 @@ public class Cell {
   public int speed;
   public boolean growing;
   public int sizeThreshold;
+  List<Color> colors = new ArrayList<>();
+  private int finalSize;
 
   public Cell(int x, int y) {
     this.x = x;
     this.y = y;
     this.played = false;
+    basic_color2();
   }
 
   public Set<Cell> aliveNeighbours(Set<Cell> livingCells) {
@@ -75,15 +78,28 @@ public class Cell {
         growing = false;
       }
     }else {
-      this.size = size - speed;
-      if (this.size < 0) {
-        growing = true;
+      if (this.size > finalSize) {
+        this.size = size - speed;
       }
     }
   }
-  public void init(){
 
-    List<Color> colors = new ArrayList<>();
+  public void basic_color2() {
+    colors = new ArrayList<>();
+    colors.add(new Color(0x828960));
+    colors.add(new Color(0x517250));
+    colors.add(new Color(0x427072));
+    colors.add(new Color(0x7C8048));
+    colors.add(new Color(0x85C6CC));
+    colors.add(new Color(0x70BEB7));
+    colors.add(new Color(0x5A5947));
+    colors.add(new Color(0x345A59));
+    colors.add(new Color(0x4E6256));
+    colors.add(new Color(0xCA2926));
+    colors.add(new Color(0x8E6C41));
+    colors.add(new Color(0xF9FCF2));
+    colors.add(new Color(0xE7C241));
+    colors.add(new Color(0x516D6C));
     colors.add(new Color(0xe9ecef));
     colors.add(new Color(0xdee2e6));
     colors.add(new Color(0xced4da));
@@ -91,15 +107,34 @@ public class Cell {
     colors.add(new Color(0x495057));
     colors.add(new Color(0x343a40));
     colors.add(new Color(0x212529));
+  }
+  public void basic_color(){
+    colors = new ArrayList<>();
+    colors.add(new Color(0xe9ecef));
+    colors.add(new Color(0xdee2e6));
+    colors.add(new Color(0xced4da));
+    colors.add(new Color(0xadb5bd));
+    colors.add(new Color(0x495057));
+    colors.add(new Color(0x343a40));
+    colors.add(new Color(0x212529));
+  }
+
+  public void basic_color_2(){
+
+  }
+
+  public void init(){
+
     if (!isDrawable){
       int randomColor = new Random().nextInt(0,colors.size() - 1);
       this.strokeColor = colors.get(randomColor);
-      this.size = new Random() .nextInt(1,8);
-      this.strokeWeight= new Random().nextInt(2,10);
+      this.size = 1;
+      this.strokeWeight= new Random().nextInt(2,12);
       this.isDrawable = true;
+      this.finalSize = new Random().nextInt(1,4);
       this.speed = new Random().nextInt(1,4);
       this.growing = true;
-      this.sizeThreshold= new Random().nextInt(size,20);
+      this.sizeThreshold= new Random().nextInt(size,30) - strokeWeight;
     }
   }
   public boolean isPlayed() {

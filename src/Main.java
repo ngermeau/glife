@@ -6,13 +6,15 @@ import java.util.*;
 public class Main extends PApplet {
 
   Set<Cell> livingCells = new HashSet<>();
+
   int sketchWidth= 800;
   int sketchHeight = 800;
-  int squareSize = 10;
+  int squareSize = 15;
   int boardWidth = sketchWidth / squareSize;
   int boardHeight= sketchHeight/ squareSize;
-  int frameRate = 10;
+  int frameRate = 120;
   Color backgroundColor = new Color(0xf8f9fa);
+//  backgroundColor = new Color(0x);
   Color playedColor = new Color(0xd62828);
   int cycle= 0;
 
@@ -21,12 +23,12 @@ public class Main extends PApplet {
 
   public void setup() {
     SoundLibrary.initialize(this);
-//    for (int i = 0; i < 100; i++){
-//      int x = round(random(0,100));
-//      int y = round(random(0,100));
-//      this.livingCells.addAll(ShapeLibrary.glide(x,y));
-//    }
     for (int i = 0; i < 10; i++){
+      int x = round(random(0,100));
+      int y = round(random(0,100));
+      this.livingCells.addAll(ShapeLibrary.glide(x,y));
+    }
+    for (int i = 0; i < 100; i++){
       int x = round(random(0,100));
       int y = round(random(0,100));
       this.livingCells.addAll(ShapeLibrary.ship(x,y));
@@ -48,26 +50,20 @@ public class Main extends PApplet {
           cell.init();
           strokeWeight(cell.strokeWeight);
           stroke(cell.strokeColor.getRGB());
-          if (cell.played){
-            stroke(playedColor.getRGB());
-          }
           noFill();
           cell.newSize();
           ellipse(x * squareSize, y * squareSize,cell.size,cell.size);
-        }else {
-          fill( this.backgroundColor.getRGB());
-          noStroke();
-          rect(x * squareSize, y * squareSize, squareSize, squareSize);
         }
       }
     }
   }
   public void draw() {
+//    background(backgroundColor.getRGB());
+    background(22);
     displayGrid();
     cycle++;
     System.out.println(cycle);
-    if (cycle % 30 == 0) {
-      System.out.println("next tick");
+    if (cycle % 10 == 0) {
       cycle = 0;
       calculateNextTickLivingCells();
       playSound();
@@ -78,7 +74,7 @@ public class Main extends PApplet {
     Optional<Cell> randomCell = livingCells.stream().filter(cell -> cell.x >= 0 && cell.x < boardWidth && cell.y >=0 && cell.y <= boardHeight).findAny();
     if (randomCell.isPresent()){
         randomCell.get().played = true;
-        randomCell.get().playSound();
+//        randomCell.get().playSound();
     }
   }
 

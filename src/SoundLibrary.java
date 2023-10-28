@@ -17,7 +17,6 @@ public class SoundLibrary {
 
   public static void play(int x) {
     SoundFile sound = new SoundFile(currentPApplet, listOfSounds.get(x));
-    System.out.println(x);
     sound.play();
   }
 
