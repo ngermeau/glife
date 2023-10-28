@@ -14,6 +14,9 @@ public class Cell {
   public Color strokeColor;
   public int size;
   public int strokeWeight;
+  public int speed;
+  public boolean growing;
+  public int sizeThreshold;
 
   public Cell(int x, int y) {
     this.x = x;
@@ -65,6 +68,19 @@ public class Cell {
     SoundLibrary.play(this.y);
   }
 
+  public void newSize(){
+    if (growing) {
+      this.size = size + speed;
+      if (this.size > this.sizeThreshold){
+        growing = false;
+      }
+    }else {
+      this.size = size - speed;
+      if (this.size < 0) {
+        growing = true;
+      }
+    }
+  }
   public void init(){
 
     List<Color> colors = new ArrayList<>();
@@ -79,8 +95,11 @@ public class Cell {
       int randomColor = new Random().nextInt(0,colors.size() - 1);
       this.strokeColor = colors.get(randomColor);
       this.size = new Random() .nextInt(1,8);
-      this.strokeWeight= new Random() .nextInt(2,10);
+      this.strokeWeight= new Random().nextInt(2,10);
       this.isDrawable = true;
+      this.speed = new Random().nextInt(1,4);
+      this.growing = true;
+      this.sizeThreshold= new Random().nextInt(size,20);
     }
   }
   public boolean isPlayed() {
