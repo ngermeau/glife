@@ -1,12 +1,19 @@
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
+
+import static java.lang.Math.random;
+import static java.lang.Math.round;
 
 public class Cell {
 
   public int x;
   public int y;
   public boolean played;
+  public boolean isDrawable;
+  public Color strokeColor;
+  public int size;
+  public int strokeWeight;
 
   public Cell(int x, int y) {
     this.x = x;
@@ -58,6 +65,24 @@ public class Cell {
     SoundLibrary.play(this.y);
   }
 
+  public void init(){
+
+    List<Color> colors = new ArrayList<>();
+    colors.add(new Color(0xe9ecef));
+    colors.add(new Color(0xdee2e6));
+    colors.add(new Color(0xced4da));
+    colors.add(new Color(0xadb5bd));
+    colors.add(new Color(0x495057));
+    colors.add(new Color(0x343a40));
+    colors.add(new Color(0x212529));
+    if (!isDrawable){
+      int randomColor = new Random().nextInt(0,colors.size() - 1);
+      this.strokeColor = colors.get(randomColor);
+      this.size = new Random() .nextInt(1,8);
+      this.strokeWeight= new Random() .nextInt(2,10);
+      this.isDrawable = true;
+    }
+  }
   public boolean isPlayed() {
     return played;
   }

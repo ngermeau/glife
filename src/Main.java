@@ -10,14 +10,14 @@ public class Main extends PApplet {
   Set<Cell> livingCells = new HashSet<>();
   int sketchWidth= 800;
   int sketchHeight = 800;
-  int squareSize = 7;
+  int squareSize = 10;
   int boardWidth = sketchWidth / squareSize;
   int boardHeight= sketchHeight/ squareSize;
-  int frameRate = 200;
+  int frameRate = 10;
   Color backgroundColor = new Color(0xf8f9fa);
-  List<Color> colors = new ArrayList<>();
+  int cycle= 0;
 
-  String colorsString = "03045e,023e8a,0077b6,0096c7,00b4d8,48cae4,90e0ef,ade8f4,caf0f8";
+//  String colorsString = "03045e,023e8a,0077b6,0096c7,00b4d8,48cae4,90e0ef,ade8f4,caf0f8";
 
 
   public void setup() {
@@ -27,14 +27,12 @@ public class Main extends PApplet {
       int y = round(random(0,100));
       this.livingCells.addAll(ShapeLibrary.glide(x,y));
     }
+    for (int i = 0; i < 100; i++){
+      int x = round(random(0,100));
+      int y = round(random(0,100));
+      this.livingCells.addAll(ShapeLibrary.ship(x,y));
+    }
     frameRate(frameRate);
-    colors.add(new Color(0xe9ecef));
-    colors.add(new Color(0xdee2e6));
-    colors.add(new Color(0xced4da));
-    colors.add(new Color(0xadb5bd));
-    colors.add(new Color(0x495057));
-    colors.add(new Color(0x343a40));
-    colors.add(new Color(0x212529));
   }
 
   public void settings() {
@@ -47,13 +45,11 @@ public class Main extends PApplet {
         final int i = x, j = y;
         Optional<Cell> cell = livingCells.stream().filter(lc-> lc.equals(new Cell(i,j))).findFirst();
         if (cell.isPresent()){
-          Color color = colors.get(round(random(0, colors.size()-1)));
-          int randomSize = round(random(0,8));
-          stroke(color.getRGB());
-          strokeWeight(random(1,10));
+          cell.get().init();
+          strokeWeight(cell.get().strokeWeight);
+          stroke(cell.get().strokeColor.getRGB());
           noFill();
-          ellipse(x * squareSize, y * squareSize,randomSize,randomSize);
-//          arc(x * squareSize, y * squareSize, randomSize, randomSize, 0, PI+QUARTER_PI, CHORD);
+          ellipse(x * squareSize, y * squareSize,cell.get().size,cell.get().size);
         }else {
           fill( this.backgroundColor.getRGB());
           noStroke();
@@ -64,8 +60,14 @@ public class Main extends PApplet {
   }
   public void draw() {
     displayGrid();
-    calculateNextTickLivingCells();
-//    playSound();
+    cycle++;
+    System.out.println(cycle);
+    if (cycle % 1 == 0) {
+      System.out.println("next tick");
+      cycle = 0;
+      calculateNextTickLivingCells();
+      //    playSound();
+    }
   }
 
   private void playSound() {
