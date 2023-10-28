@@ -107,6 +107,8 @@ public class Cell {
     colors.add(new Color(0x495057));
     colors.add(new Color(0x343a40));
     colors.add(new Color(0x212529));
+    colors.add(new Color(0x599492));
+    colors.add(new Color(0xE5AC69));
   }
   public void basic_color(){
     colors = new ArrayList<>();
@@ -132,7 +134,7 @@ public class Cell {
       this.strokeWeight= new Random().nextInt(2,12);
       this.isDrawable = true;
       this.finalSize = new Random().nextInt(1,4);
-      this.speed = new Random().nextInt(1,4);
+      this.speed = new Random().nextInt(1,3);
       this.growing = true;
       this.sizeThreshold= new Random().nextInt(size,30) - strokeWeight;
     }

@@ -2,17 +2,18 @@ import processing.core.PApplet;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class Main extends PApplet {
 
   Set<Cell> livingCells = new HashSet<>();
 
-  int sketchWidth= 800;
-  int sketchHeight = 800;
+  int sketchWidth= 1000;
+  int sketchHeight = 1000;
   int squareSize = 15;
   int boardWidth = sketchWidth / squareSize;
   int boardHeight= sketchHeight/ squareSize;
-  int frameRate = 120;
+  int frameRate = 30;
   Color backgroundColor = new Color(0xf8f9fa);
 //  backgroundColor = new Color(0x);
   Color playedColor = new Color(0xd62828);
@@ -41,29 +42,29 @@ public class Main extends PApplet {
   }
 
   public void displayGrid(){
-    for (int x = 0; x < width / squareSize; x++) {
-      for (int y = 0; y < height / squareSize; y++) {
-        final int i = x, j = y;
-        Optional<Cell> optCell = livingCells.stream().filter(lc-> lc.equals(new Cell(i,j))).findFirst();
-        if (optCell.isPresent()){
-          Cell cell = optCell.get();
-          cell.init();
-          strokeWeight(cell.strokeWeight);
-          stroke(cell.strokeColor.getRGB());
-          noFill();
-          cell.newSize();
-          ellipse(x * squareSize, y * squareSize,cell.size,cell.size);
+    List<Cell> lc = livingCells.stream().toList();
+    for (int i = 0; i < lc.size()- 1; i++) {
+        Cell cell = lc.get(i);
+        cell.init();
+        strokeWeight(cell.strokeWeight);
+        stroke(cell.strokeColor.getRGB());
+        noFill();
+        if (cell.isPlayed()){
+          cell.speed = 1;
+          cell.strokeWeight = 2;
+          cell.sizeThreshold = 1000;
         }
+        cell.newSize();
+        ellipse(cell.x * squareSize, cell.y * squareSize,cell.size,cell.size);
       }
     }
-  }
   public void draw() {
 //    background(backgroundColor.getRGB());
     background(22);
     displayGrid();
     cycle++;
     System.out.println(cycle);
-    if (cycle % 10 == 0) {
+    if (cycle % 80 == 0) {
       cycle = 0;
       calculateNextTickLivingCells();
       playSound();
@@ -94,6 +95,7 @@ public class Main extends PApplet {
       int nbrOfAliveNeighboor = cell.aliveNeighbours(livingCells).size();
       if (nbrOfAliveNeighboor == 2 || nbrOfAliveNeighboor == 3) {
         cell.isDrawable = false;
+        cell.played = false;
         newLivingCells.add(cell);
       }
     }
@@ -102,6 +104,7 @@ public class Main extends PApplet {
       int nbrOfAliveNeighboor = cell.aliveNeighbours(livingCells).size();
       if (nbrOfAliveNeighboor == 3) {
         cell.isDrawable = false;
+        cell.played = false;
         newLivingCells.add(cell);
       }
 
