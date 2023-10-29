@@ -23,7 +23,6 @@ public class Cell {
   public Cell(int x, int y) {
     this.x = x;
     this.y = y;
-    this.played = false;
     basic_color2();
   }
 
@@ -66,10 +65,6 @@ public class Cell {
     return "[" + x + "," + y + "]";
   }
 
-  public void playSound(){
-    this.played = true;
-    SoundLibrary.play(this.y);
-  }
 
   public void newSize(){
     if (growing) {
@@ -110,20 +105,7 @@ public class Cell {
     colors.add(new Color(0x599492));
     colors.add(new Color(0xE5AC69));
   }
-  public void basic_color(){
-    colors = new ArrayList<>();
-    colors.add(new Color(0xe9ecef));
-    colors.add(new Color(0xdee2e6));
-    colors.add(new Color(0xced4da));
-    colors.add(new Color(0xadb5bd));
-    colors.add(new Color(0x495057));
-    colors.add(new Color(0x343a40));
-    colors.add(new Color(0x212529));
-  }
 
-  public void basic_color_2(){
-
-  }
 
   public void init(){
 
@@ -138,8 +120,5 @@ public class Cell {
       this.growing = true;
       this.sizeThreshold= new Random().nextInt(size,30) - strokeWeight;
     }
-  }
-  public boolean isPlayed() {
-    return played;
   }
 }
