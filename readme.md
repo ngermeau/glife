@@ -5,7 +5,6 @@ Quick Implementation of game of life in a artistic way in Java and using process
 
 <p align="center">
     <img src="screenshot.png" alt="colorfull amiga" height="570">
-  </a>
 </p>
 
 
