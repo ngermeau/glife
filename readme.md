@@ -1,10 +1,10 @@
 # Syntlife
 
-Quick experiment on coupling a game of life with synthetizer. Colors of the cells is based on an underlying image.
+Quick Implementation of game of life in a artistic way in Java and using processing.
 
 
 <p align="center">
-    <img src="screenshot.png" alt="colorfull amiga" height="372">
+    <img src="screenshot.png" alt="colorfull amiga" height="570">
   </a>
 </p>
 
