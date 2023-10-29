@@ -1,4 +1,4 @@
-# Syntlife
+# Glife 
 
 Quick Implementation of game of life in a artistic way in Java and using processing.
 
