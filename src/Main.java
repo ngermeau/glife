@@ -1,11 +1,13 @@
 import processing.core.PApplet;
+import processing.event.MouseEvent;
 
 import java.util.*;
 
 public class Main extends PApplet {
 
   Set<Cell> livingCells = new HashSet<>();
-  public static int cycle= 0;
+  public int cycle= 0;
+  public int cycleSpeed = 60;
 
 
   public void settings() {
@@ -15,8 +17,8 @@ public class Main extends PApplet {
   public void setup() {
     frameRate(Config.frameRate);
     for (int i = 0; i < Config.startUpCells; i++){
-      int x = round(random(0,Config.sketchWidth/Config.squareSize));
-      int y = round(random(0,Config.sketchHeight/Config.squareSize));
+      int x = round(random(0,Config.sketchWidth/Config.cellSize));
+      int y = round(random(0,Config.sketchHeight/Config.cellSize));
       this.livingCells.add(new Cell(x,y));
     }
   }
@@ -26,12 +28,12 @@ public class Main extends PApplet {
     stroke(cell.strokeColor.getRGB());
     noFill();
     cell.updateSize();
-    ellipse(cell.x * Config.squareSize, cell.y * Config.squareSize, cell.size, cell.size);
+    ellipse(cell.x * Config.cellSize, cell.y * Config.cellSize, cell.size, cell.size);
   }
 
   private void cycle(){
     cycle++;
-    if (cycle % Config.cycleSpeed != 0) return;
+    if (cycleSpeed != 0 && cycle % cycleSpeed != 0) return;
     cycle = 0;
     calculateNextLivingCells();
   }
@@ -69,6 +71,17 @@ public class Main extends PApplet {
 
     }
     this.livingCells = newLivingCells;
+  }
+
+  public void mouseDragged(){
+    int x = round(mouseX/Config.cellSize);
+    int y = round(mouseY/Config.cellSize);
+    livingCells.add(new Cell(x,y));
+  }
+
+  public void mouseWheel(MouseEvent event) {
+    cycleSpeed -= round(event.getCount());
+    System.out.println(cycleSpeed);
   }
 
   public static void main(String[] args) {

@@ -7,14 +7,13 @@ public class Config {
   //Sketch
   public static int sketchWidth= 1000;
   public static int sketchHeight = 1000;
-  public static int squareSize = 15;
+  public static int cellSize = 15;
 
   //Speed
-  public static int cycleSpeed = 60;
   public static int frameRate = 50;
 
   //Init
-  public static int startUpCells = 1000;
+  public static int startUpCells = 20;
 
   //Grid
   public static Color backgroundColor = new Color(22);
