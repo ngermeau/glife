@@ -2,28 +2,36 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static java.lang.Math.random;
-import static java.lang.Math.round;
 
 public class Cell {
 
   public int x;
   public int y;
-  public boolean played;
-  public boolean isDrawable;
-  public Color strokeColor;
+
   public int size;
+  public int thresholdSize;
+  public final int finalSize;
+  public int speedOfGrowth;
+
+  public Color strokeColor;
   public int strokeWeight;
-  public int speed;
-  public boolean growing;
-  public int sizeThreshold;
+  public boolean shouldGrow;
+
   List<Color> colors = new ArrayList<>();
-  private int finalSize;
 
   public Cell(int x, int y) {
+    basic_color2();
     this.x = x;
     this.y = y;
-    basic_color2();
+
+    this.size = 1;
+    this.thresholdSize = new Random().nextInt(size, 30) - strokeWeight;
+    this.finalSize = new Random().nextInt(1, 4);
+    this.speedOfGrowth = new Random().nextInt(1, 3);
+
+    this.strokeColor = colors.get(new Random().nextInt(0, colors.size() - 1));
+    this.strokeWeight = new Random().nextInt(2, 12);
+    this.shouldGrow = true;
   }
 
   public Set<Cell> aliveNeighbours(Set<Cell> livingCells) {
@@ -37,6 +45,7 @@ public class Cell {
     neighbours.removeAll(livingCells);
     return neighbours;
   }
+
   public Set<Cell> neighbours() {
     Set<Cell> neighbours = new HashSet<>();
     for (int i = -1; i <= 1; i++) {
@@ -66,16 +75,12 @@ public class Cell {
   }
 
 
-  public void newSize(){
-    if (growing) {
-      this.size = size + speed;
-      if (this.size > this.sizeThreshold){
-        growing = false;
-      }
-    }else {
-      if (this.size > finalSize) {
-        this.size = size - speed;
-      }
+  public void updateSize() {
+    if (shouldGrow) {
+      this.size = size + speedOfGrowth;
+      if (this.size >= this.thresholdSize) shouldGrow = false;
+    } else if (this.size > finalSize) {
+      this.size = size - speedOfGrowth;
     }
   }
 
@@ -107,18 +112,4 @@ public class Cell {
   }
 
 
-  public void init(){
-
-    if (!isDrawable){
-      int randomColor = new Random().nextInt(0,colors.size() - 1);
-      this.strokeColor = colors.get(randomColor);
-      this.size = 1;
-      this.strokeWeight= new Random().nextInt(2,12);
-      this.isDrawable = true;
-      this.finalSize = new Random().nextInt(1,4);
-      this.speed = new Random().nextInt(1,3);
-      this.growing = true;
-      this.sizeThreshold= new Random().nextInt(size,30) - strokeWeight;
-    }
-  }
 }

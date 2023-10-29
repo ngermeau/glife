@@ -2,7 +2,6 @@ import processing.core.PApplet;
 
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 public class Main extends PApplet {
 
@@ -35,22 +34,17 @@ public class Main extends PApplet {
     }
   }
 
+  private void displayCell(Cell cell) {
+    strokeWeight(cell.strokeWeight);
+    stroke(cell.strokeColor.getRGB());
+    noFill();
+    cell.updateSize();
+    ellipse(cell.x * squareSize, cell.y * squareSize, cell.size, cell.size);
+  }
 
-  public void displayGrid(){
-    List<Cell> lc = livingCells.stream().toList();
-    for (int i = 0; i < lc.size()- 1; i++) {
-        Cell cell = lc.get(i);
-        cell.init();
-        strokeWeight(cell.strokeWeight);
-        stroke(cell.strokeColor.getRGB());
-        noFill();
-        cell.newSize();
-        ellipse(cell.x * squareSize, cell.y * squareSize,cell.size,cell.size);
-      }
-    }
   public void draw() {
     background(backgroundColor.getRGB());
-    displayGrid();
+    livingCells.forEach(this::displayCell);
     cycle++;
     if (cycle % cycleSpeed == 0) {
       cycle = 0;
@@ -71,20 +65,16 @@ public class Main extends PApplet {
     Set<Cell> deadCells = neighboursDeadCells(livingCells);
 
     for (Cell cell : livingCells) {
-      int nbrOfAliveNeighboor = cell.aliveNeighbours(livingCells).size();
-      if (nbrOfAliveNeighboor == 2 || nbrOfAliveNeighboor == 3) {
-        cell.isDrawable = false;
-        cell.played = false;
-        newLivingCells.add(cell);
+      int nbrOfAliveNeighbours = cell.aliveNeighbours(livingCells).size();
+      if (nbrOfAliveNeighbours == 2 || nbrOfAliveNeighbours == 3) {
+        newLivingCells.add(new Cell(cell.x,cell.y));
       }
     }
 
     for (Cell cell : deadCells) {
-      int nbrOfAliveNeighboor = cell.aliveNeighbours(livingCells).size();
-      if (nbrOfAliveNeighboor == 3) {
-        cell.isDrawable = false;
-        cell.played = false;
-        newLivingCells.add(cell);
+      int nbrOfAliveNeighbours = cell.aliveNeighbours(livingCells).size();
+      if (nbrOfAliveNeighbours == 3) {
+        newLivingCells.add(new Cell(cell.x,cell.y));
       }
 
     }
