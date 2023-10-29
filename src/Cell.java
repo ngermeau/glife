@@ -1,8 +1,5 @@
 import java.awt.*;
 import java.util.*;
-import java.util.List;
-
-
 public class Cell {
 
   public int x;
@@ -17,21 +14,22 @@ public class Cell {
   public int strokeWeight;
   public boolean shouldGrow;
 
-  List<Color> colors = new ArrayList<>();
-
+  public static int Random(int min, int max){
+    return new Random().nextInt(min,max);
+  }
   public Cell(int x, int y) {
-    basic_color2();
     this.x = x;
     this.y = y;
 
-    this.size = 1;
-    this.thresholdSize = new Random().nextInt(size, 30) - strokeWeight;
-    this.finalSize = new Random().nextInt(1, 4);
-    this.speedOfGrowth = new Random().nextInt(1, 3);
-
-    this.strokeColor = colors.get(new Random().nextInt(0, colors.size() - 1));
-    this.strokeWeight = new Random().nextInt(2, 12);
+    this.size = Config.initialSize;
     this.shouldGrow = true;
+
+    this.thresholdSize = Random(size, Config.thresholdSizeMax);
+    this.finalSize = Random(Config.finalSizeMin,Config.finalSizeMax);
+    this.speedOfGrowth = Random(Config.speedOfGrowthMin,Config.speedOfGrowthMax);
+
+    this.strokeColor = Config.colors.get(Random(0,Config.colors.size()-1));
+    this.strokeWeight = Random(Config.strokeWeightMin, Config.strokeWeightMax);
   }
 
   public Set<Cell> aliveNeighbours(Set<Cell> livingCells) {
@@ -83,33 +81,5 @@ public class Cell {
       this.size = size - speedOfGrowth;
     }
   }
-
-  public void basic_color2() {
-    colors = new ArrayList<>();
-    colors.add(new Color(0x828960));
-    colors.add(new Color(0x517250));
-    colors.add(new Color(0x427072));
-    colors.add(new Color(0x7C8048));
-    colors.add(new Color(0x85C6CC));
-    colors.add(new Color(0x70BEB7));
-    colors.add(new Color(0x5A5947));
-    colors.add(new Color(0x345A59));
-    colors.add(new Color(0x4E6256));
-    colors.add(new Color(0xCA2926));
-    colors.add(new Color(0x8E6C41));
-    colors.add(new Color(0xF9FCF2));
-    colors.add(new Color(0xE7C241));
-    colors.add(new Color(0x516D6C));
-    colors.add(new Color(0xe9ecef));
-    colors.add(new Color(0xdee2e6));
-    colors.add(new Color(0xced4da));
-    colors.add(new Color(0xadb5bd));
-    colors.add(new Color(0x495057));
-    colors.add(new Color(0x343a40));
-    colors.add(new Color(0x212529));
-    colors.add(new Color(0x599492));
-    colors.add(new Color(0xE5AC69));
-  }
-
 
 }
